@@ -1,0 +1,8 @@
+{
+  "editor.accessibilitySupport": "on",
+  "editor.cursorStyle": "underline",
+  "workbench.colorTheme": "Monokai",
+  "workbench.fontAliasing": "antialiased",
+  "workbench.iconTheme": "ayu",
+  "workbench.tree.renderIndentGuides": "none"
+}
