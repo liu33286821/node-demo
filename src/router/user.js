@@ -1,26 +1,50 @@
 const {
-	loginCheck
+	login
 } = require('../controller/user')
 const {
 	SuccessModel,
 	ErrorModel
 } = require('../model/resModel')
+
+
 const handleUserRouter = (req, res) => {
 	const {
-		method,
+		method, 
 		url
 	} = req
 	const path = url.split('?')[0];
 	// 登录接口
-	if (method === 'POST' && path === '/api/user/login') {
+	if (method === 'GET' && path === '/api/user/login') {
+		// const {
+		// 	username,
+		// 	password
+		// } = req.body;
 		const {
 			username,
 			password
-		} = req.body;
-		const result = loginCheck(username, password);
-		if (result) return new SuccessModel();
-		return new ErrorModel("账户名或密码错误");
+		} = req.query;
+		const result = login(username, password);
+		return result.then(data =>{
+			if (data.username) {
+				// 操作cookie
+				req.session.username = data.username;
+				req.session.realname = data.realname;
+				return new SuccessModel(data, "登录成功")
+			}
+			return new ErrorModel("登录失败")
+		});
+	}
+
+	// 登录验证测试 
+	if(method === 'GET' && req.path === '/api/user/login-test') {
+	
+		if (req.session.username) {
+			return Promise.resolve(new SuccessModel({
+				session:req.session
+			}));
+		}
+		return Promise.resolve(new ErrorModel("尚未登录"));
 	}
 }
-
+ 
 module.exports = handleUserRouter
